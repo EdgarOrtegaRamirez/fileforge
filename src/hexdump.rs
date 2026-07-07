@@ -2,7 +2,6 @@
 ///
 /// Produces formatted hex dumps with ASCII representation, smart grouping,
 /// and data type detection for common patterns.
-
 /// Generate a standard hex dump of data.
 ///
 /// Format: `OFFSET: HH HH HH ... | ASCII...`

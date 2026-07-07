@@ -2,7 +2,6 @@
 ///
 /// Computes histograms of byte value distributions, identifies dominant
 /// byte values, and provides statistical summaries.
-
 /// Byte frequency histogram (256 buckets for each byte value 0-255).
 #[derive(Debug, Clone)]
 pub struct ByteFrequency {
@@ -58,7 +57,7 @@ impl ByteFrequency {
             .map(|(i, &c)| (i as u8, c))
             .filter(|(_, c)| *c > 0)
             .collect();
-        pairs.sort_by(|a, b| b.1.cmp(&a.1));
+        pairs.sort_by_key(|b| std::cmp::Reverse(b.1));
         pairs
             .into_iter()
             .take(n)

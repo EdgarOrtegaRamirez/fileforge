@@ -2,7 +2,6 @@
 ///
 /// Uses a database of file signatures (magic bytes) to identify file types
 /// regardless of file extension. Supports 100+ common file formats.
-
 /// A file signature entry with offset and expected bytes.
 #[derive(Debug, Clone)]
 pub struct FileSignature {

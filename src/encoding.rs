@@ -3,7 +3,6 @@
 /// Detects encoding using BOM (Byte Order Mark) detection, statistical
 /// analysis, and heuristic patterns. Supports UTF-8, UTF-16 (LE/BE),
 /// UTF-32 (LE/BE), ASCII, and Latin-1.
-
 /// Detected encoding information.
 #[derive(Debug, Clone, serde::Serialize)]
 pub struct EncodingDetection {

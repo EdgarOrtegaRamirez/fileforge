@@ -118,6 +118,7 @@ fn cosine_similarity(a: &[u64], b: &[u64]) -> f64 {
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 fn generate_summary(
     similarity: f64,
     entropy_a: f64,

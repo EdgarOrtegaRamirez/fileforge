@@ -1,5 +1,5 @@
 use clap::{Parser, Subcommand};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use fileforge::compare;
 use fileforge::encoding;
@@ -489,7 +489,7 @@ fn cmd_analyze(file: &PathBuf, json: bool) {
     }
 }
 
-fn cmd_scan(dir: &PathBuf, max_depth: usize, json: bool) {
+fn cmd_scan(dir: &Path, max_depth: usize, json: bool) {
     let mut file_types: std::collections::HashMap<String, Vec<String>> =
         std::collections::HashMap::new();
     let mut total = 0u64;
@@ -571,7 +571,7 @@ fn cmd_scan(dir: &PathBuf, max_depth: usize, json: bool) {
         println!();
 
         let mut sorted: Vec<_> = file_types.into_iter().collect();
-        sorted.sort_by(|a, b| b.1.len().cmp(&a.1.len()));
+        sorted.sort_by_key(|b| std::cmp::Reverse(b.1.len()));
 
         for (file_type, files) in &sorted {
             println!("{}: {} files", file_type, files.len());

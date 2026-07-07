@@ -4,7 +4,6 @@
 /// H(X) = -Σ p(x) * log2(p(x))
 ///
 /// Supports global entropy, windowed entropy scanning, and entropy profiling.
-
 /// Compute Shannon entropy of a byte slice.
 ///
 /// Returns a value between 0.0 (all bytes identical) and 8.0 (perfectly random).
@@ -128,7 +127,7 @@ pub fn detect_encryption(data: &[u8]) -> EncryptionDetection {
     let likely_encrypted = entropy > 7.5 && active_bytes > 200;
 
     // Compressed data typically has entropy between 5.0 and 7.5
-    let likely_compressed = entropy >= 5.0 && entropy <= 7.5;
+    let likely_compressed = (5.0..=7.5).contains(&entropy);
 
     // Low entropy with few active bytes = structured data
     let likely_structured = entropy < 3.0 && active_bytes < 50;
