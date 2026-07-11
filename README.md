@@ -8,17 +8,18 @@
 
 ## Features
 
-| Command | Description |
-|---------|-------------|
-| `detect` | Identify file types using 100+ magic byte signatures |
-| `entropy` | Shannon entropy analysis with encryption/compression detection |
-| `frequency` | Byte frequency histograms and content classification |
-| `encoding` | Detect text encodings (UTF-8, UTF-16, UTF-32, ASCII) |
-| `hexdump` | Hex dumps with ASCII view and byte-type annotations |
-| `compare` | Compare two files by entropy profiles and frequency vectors |
-| `analyze` | Complete file analysis (combines all modules) |
-| `scan` | Batch directory scanning with CSV/JSON output |
-| `info` | File metadata (size, timestamps, permissions) |
+|| Command | Description |
+||---------|-------------|
+|| `detect` | Identify file types using 100+ magic byte signatures |
+|| `entropy` | Shannon entropy analysis with encryption/compression detection |
+|| `frequency` | Byte frequency histograms and content classification |
+|| `encoding` | Detect text encodings (UTF-8, UTF-16, UTF-32, ASCII) |
+|| `hexdump` | Hex dumps with ASCII view and byte-type annotations |
+|| `compare` | Compare two files by entropy profiles and frequency vectors |
+|| `analyze` | Complete file analysis (combines all modules) |
+|| `scan` | Batch directory scanning with CSV/JSON output |
+|| `strings` | Extract printable strings from binary files |
+|| `info` | File metadata (size, timestamps, permissions) |
 
 ## Quick Start
 
@@ -54,6 +55,15 @@ fileforge scan /path/to/files --format json --output results.json
 
 # Hex dump with annotations
 fileforge hexdump --annotated --length 256 firmware.bin
+
+# Extract printable strings from a binary
+fileforge strings mystery.bin
+
+# Extract strings with UTF-16LE support and show offsets
+fileforge strings --unicode --show-offset firmware.bin
+
+# Extract strings as JSON
+fileforge strings --json --min-length 8 binary.bin
 ```
 
 ## Architecture

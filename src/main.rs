@@ -7,6 +7,7 @@ use fileforge::entropy;
 use fileforge::frequency;
 use fileforge::hexdump;
 use fileforge::magic;
+use fileforge::strings;
 
 #[derive(Parser)]
 #[command(
@@ -111,6 +112,27 @@ enum Commands {
 
     /// Show information about the magic byte database
     Info,
+
+    /// Extract printable strings from binary files
+    Strings {
+        /// File to analyze
+        file: PathBuf,
+        /// Minimum string length (default: 4)
+        #[arg(short = 'n', long, default_value = "4")]
+        min_length: usize,
+        /// Include UTF-16LE encoded strings
+        #[arg(long)]
+        unicode: bool,
+        /// Show byte offset for each string
+        #[arg(long)]
+        show_offset: bool,
+        /// Maximum number of strings to show (default: 1000)
+        #[arg(long, default_value = "1000")]
+        max: usize,
+        /// Output as JSON
+        #[arg(long)]
+        json: bool,
+    },
 }
 
 fn main() {
@@ -135,6 +157,14 @@ fn main() {
         Commands::Analyze { file, json } => cmd_analyze(&file, json),
         Commands::Scan { dir, depth, json } => cmd_scan(&dir, depth, json),
         Commands::Info => cmd_info(),
+        Commands::Strings {
+            file,
+            min_length,
+            unicode,
+            show_offset,
+            max,
+            json,
+        } => cmd_strings(&file, min_length, unicode, show_offset, max, json),
     }
 }
 
@@ -575,6 +605,49 @@ fn cmd_scan(dir: &Path, max_depth: usize, json: bool) {
 
         for (file_type, files) in &sorted {
             println!("{}: {} files", file_type, files.len());
+        }
+    }
+}
+
+fn cmd_strings(
+    file: &PathBuf,
+    min_length: usize,
+    unicode: bool,
+    show_offset: bool,
+    max: usize,
+    json: bool,
+) {
+    let data = match std::fs::read(file) {
+        Ok(d) => d,
+        Err(e) => {
+            eprintln!("Error reading {}: {}", file.display(), e);
+            return;
+        }
+    };
+
+    let results = strings::extract_strings(&data, min_length, unicode);
+
+    if json {
+        let output = serde_json::json!({
+            "file": file.display().to_string(),
+            "size": data.len(),
+            "total_strings": results.len(),
+            "strings": results.iter().take(max).collect::<Vec<_>>(),
+        });
+        println!("{}", serde_json::to_string_pretty(&output).unwrap());
+    } else {
+        println!("Strings from: {}", file.display());
+        println!(
+            "Minimum length: {} | Format: {}",
+            min_length,
+            if unicode { "ASCII + UTF-16LE" } else { "ASCII" }
+        );
+        println!("Total strings found: {}", results.len());
+        if results.is_empty() {
+            println!("(no strings found)");
+        } else {
+            println!();
+            print!("{}", strings::format_strings(&results, show_offset, max));
         }
     }
 }

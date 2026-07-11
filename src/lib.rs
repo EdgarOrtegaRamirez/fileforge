@@ -10,6 +10,7 @@ pub mod entropy;
 pub mod frequency;
 pub mod hexdump;
 pub mod magic;
+pub mod strings;
 
 /// Unified file analysis result combining all analysis modules.
 #[derive(Debug, Clone, serde::Serialize)]
